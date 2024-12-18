@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Game: Identify the Statement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        .game-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .choices button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .choices button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+        .hidden {
+            display: none;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 1em;
+            color: #4caf50;
+            cursor: pointer;
+        }
+        .footer:hover {
+            text-decoration: underline;
+        }
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: left;
+            font-size: 1em;
+        }
+        .modal .close {
+            text-align: right;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h2>Chapter 8</h2>
+    <h1>Logic Statement Game</h1>
+    <div class="question" id="question">If it is raining, then the ground is wet.</div>
+
+    <div class="choices">
+        <button onclick="checkAnswer('conditional')">Conditional</button>
+        <button onclick="checkAnswer('biconditional')">Biconditional</button>
+        <button onclick="checkAnswer('converse')">Converse</button>
+        <button onclick="checkAnswer('inverse')">Inverse</button>
+        <button onclick="checkAnswer('contrapositive')">Contrapositive</button>
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <button id="next-button" class="hidden" onclick="nextQuestion()">Next Question</button>
+</div>
+
+<div class="footer" onclick="showMembers()">Members</div>
+
+<!-- Modal for Members -->
+<div id="modal" class="hidden">
+    <div class="overlay" onclick="closeModal()"></div>
+    <div class="modal">
+        <div class="close" onclick="closeModal()">✖</div>
+        <p><strong>Members:</strong></p>
+        <ul>
+            <li>Johnrey Haylar</li>
+            <li>Vincent Pitalbo</li>
+            <li>Joshua Glena</li>
+            <li>John Mark Garbin</li>
+            <li>Leizl Germedia</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            statement: "If it is raining, then the ground is wet.",
+            correctAnswer: "conditional"
+        },
+        {
+            statement: "If the ground is wet, then it is raining.",
+            correctAnswer: "converse"
+        },
+        {
+            statement: "If it is not raining, then the ground is not wet.",
+            correctAnswer: "inverse"
+        },
+        {
+            statement: "If the ground is not wet, then it is not raining.",
+            correctAnswer: "contrapositive"
+        },
+        {
+            statement: "The ground is wet if and only if it is raining.",
+            correctAnswer: "biconditional"
+        },
+        {
+            statement: "If you study hard, then you will pass the test.",
+            correctAnswer: "conditional"
+        },
+        {
+            statement: "If you pass the test, then you studied hard.",
+            correctAnswer: "converse"
+        },
+        {
+            statement: "If you do not study hard, then you will not pass the test.",
+            correctAnswer: "inverse"
+        },
+        {
+            statement: "If you do not pass the test, then you did not study hard.",
+            correctAnswer: "contrapositive"
+        },
+        {
+            statement: "You will pass the test if and only if you study hard.",
+            correctAnswer: "biconditional"
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    function checkAnswer(answer) {
+        const resultElement = document.getElementById('result');
+        const nextButton = document.getElementById('next-button');
+        
+        if (answer === questions[currentQuestionIndex].correctAnswer) {
+            resultElement.textContent = 'Correct!';
+            resultElement.style.color = 'green';
+        } else {
+            resultElement.textContent = 'Incorrect! The correct answer is: ' + capitalize(questions[currentQuestionIndex].correctAnswer);
+            resultElement.style.color = 'red';
+        }
+
+        nextButton.classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        
+        if (currentQuestionIndex < questions.length) {
+            document.getElementById('question').textContent = questions[currentQuestionIndex].statement;
+            document.getElementById('result').textContent = '';
+            document.getElementById('next-button').classList.add('hidden');
+        } else {
+            document.getElementById('question').textContent = 'You have completed the game!';
+            document.getElementById('result').textContent = 'Refresh the page to play again.';
+            document.getElementById('next-button').classList.add('hidden');
+        }
+    }
+
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function showMembers() {
+        document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('modal').classList.add('hidden');
+    }
+</script>
+
+</body>
+</html>
